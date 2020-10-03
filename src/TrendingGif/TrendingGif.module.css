@@ -1,0 +1,21 @@
+.TrendingPageHeading {
+    padding-top: 15px;
+    animation: trendingPageHeadingAnimi 3s infinite;
+}
+
+.AllCardSection {
+    margin-top: 20px;
+}
+
+@keyframes trendingPageHeadingAnimi {
+    0% {
+        text-shadow: 1px 2px 5px lightblue;
+    }
+    50% {
+        /* color: white; */
+        text-shadow: 1px 2px 5px teal;
+    }
+    100% {
+        text-shadow: 1px 2px 5px lightblue;
+    }
+}

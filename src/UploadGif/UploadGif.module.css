@@ -1,0 +1,34 @@
+
+.UploadPageHeading {
+    padding-top: 15px;
+    animation: uploadPageHeadingAnimi 3s infinite;
+}
+
+@keyframes uploadPageHeadingAnimi {
+    0% {
+        text-shadow: 1px 2px 5px lightblue;
+    }
+    50% {
+        /* color: white; */
+        text-shadow: 1px 2px 5px teal;
+    }
+    100% {
+        text-shadow: 1px 2px 5px lightblue;
+    }
+}
+
+.chipTagInput {
+    padding: 10px !important;
+    width: 100%;
+    border: 1px solid #ccc !important;
+}
+
+.gifFileInput input {
+    cursor: pointer !important;
+}
+
+.uploadGifButton {
+    margin-top: 20px;
+    padding: 8px;
+    width: 100px;
+}

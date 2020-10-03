@@ -1,0 +1,77 @@
+
+.MainCard {
+    margin-bottom: 40px;
+    height: 500px;
+    width: 400px;
+    box-shadow: 1px 2px 5px teal;
+    animation: mainCardAnimi 2s infinite;
+}
+
+.MainCardGif {
+    text-align: center;
+    padding: 10px;
+    height: 360px;
+    width: 400px;
+    border-radius: 15px;
+}
+
+
+.CardHeaderImage {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+
+.CardHeaderBody {
+    padding: 20px 0 10px 0;
+}
+
+.CardHeaderTitle {
+    font-weight: 600;
+    color: blueviolet;
+    font-size: 18px;
+    margin-bottom: 5px;
+}
+
+.CardHeaderDate {
+    font-size: 12px;
+    color: gray;
+}
+
+.CardDescription {
+    /* position: absolute;
+    top:80px; */
+    padding: 0 20px 0;
+}
+
+@media screen and (max-width: 470px) {
+
+    .MainCardGif {
+      width: 100%;
+      padding: 10px;
+    }
+  
+    .MainCard {
+      width: 100%;
+      margin-bottom: 30px;
+    }
+
+    .CardHeaderTitle, .CardHeaderDate {
+        margin-left: 5px;
+    }
+
+  
+}
+
+@keyframes mainCardAnimi {
+    0% {
+        box-shadow: 1px 2px 5px teal;
+    }
+    50% {
+        box-shadow: 1px 2px 5px blueviolet;
+    }
+    100% {
+        box-shadow: 1px 2px 5px teal;
+    }
+}
+

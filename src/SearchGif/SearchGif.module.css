@@ -1,0 +1,33 @@
+
+.searchGifController {
+    padding-top: 20px;
+}
+
+.searchGifInput {
+    font-size: 18px;
+    padding: 20px;
+    border: 3px solid teal;
+}
+
+.searchGifButton {
+    background-color: teal;
+    border: 2px solid teal;
+}
+
+.searchGifButton:hover {
+    color: black;
+    background-color: #80bdff;
+    border: 2px solid #80bdff;
+}
+
+.searchGifInput:focus {
+    box-shadow: none;
+    outline: none !important;
+    outline-style: none !important;
+}
+
+.searchGifButton:focus, .searchGifButton:active {
+    box-shadow: none !important;
+    outline: none !important;
+    outline-style: none !important;
+}
