@@ -11,7 +11,8 @@ export default class UploadGif extends Component {
         selectedFile: '',
         tags: [],
         gifId: '',
-        loading: false
+        loading: false,
+        imagePreview: ''
     }
 
     previewUploadGif = () => {
@@ -22,6 +23,7 @@ export default class UploadGif extends Component {
         e.preventDefault();
 
         if(this.state.selectedFile === '' || this.state.selectedFile.type !== 'image/gif') {
+            this.setState({ imagePreview: '' }); 
             alert('only gif file is allowed!');
             return;
         }
@@ -37,14 +39,14 @@ export default class UploadGif extends Component {
             console.log(gifTags)
         }
 
+        uploadGifData.append('api_key', 'iQJIGVpAwQI36Glqc1u04Xu6LThD5yA3')
+
         this.setState({loading:true})
 
         makePostRequest(
             `https://upload.giphy.com/v1/gifs`, 
             uploadGifData, 
-                {
-                    api_key:'iQJIGVpAwQI36Glqc1u04Xu6LThD5yA3', 
-                }
+            null    
             )
             .then(res => {
                 this.setState({
@@ -92,11 +94,25 @@ export default class UploadGif extends Component {
     onFileChange = (e) => { 
      
         if(e.target.files.length === 0 || e.target.files[0].type !== 'image/gif') {
+            this.setState({ imagePreview: '' }); 
+            e.target.value = ''
             alert('only gif file is allowed!');
             return;
         }
         // Update the state 
-        this.setState({ selectedFile: e.target.files[0] }); 
+        // console.log(e.target.files[0])
+
+        if (e.target.files && e.target.files[0]) {
+            let outsideThis = this;
+            this.setState({ selectedFile: e.target.files[0] })
+            var reader = new FileReader();
+            reader.onload = function(event) {
+            //    console.log(event.target.result)
+               outsideThis.setState({ imagePreview: event.target.result }); 
+            }
+            reader.readAsDataURL(e.target.files[0]);
+        }
+      
        
     }; 
 
@@ -131,7 +147,20 @@ export default class UploadGif extends Component {
                             id="exampleCustomFileBrowser" 
                             label="Yo, pick a gif file!" />
                         </FormGroup>
-
+                        {
+                            this.state.imagePreview !== '' ?
+                            <>
+                            <p className={classes.gifImagePreviewText}>
+                                GIF Preview:
+                            </p>
+                            <img width="230" height="240" alt="test"
+                            className={classes.gifImagePreview}
+                            src={this.state.imagePreview}></img>
+                            </>
+                            :
+                            null
+                        }
+                        
                         <FormGroup>
                             <Label>Tags Name</Label> <br />
                             <ChipInput

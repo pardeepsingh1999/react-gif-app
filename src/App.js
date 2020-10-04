@@ -38,7 +38,7 @@ class App extends Component {
   toggleNavbar = () => this.setState({collapsed: !this.state.collapsed});
 
   handleActiveLink = (e) => {
-      const activeLinkIs = e.target.href.split('/')[3];
+      const activeLinkIs = e.target.href ? e.target.href.split('/')[3] : '';
       this.setState({activeLink:activeLinkIs})
   }
 

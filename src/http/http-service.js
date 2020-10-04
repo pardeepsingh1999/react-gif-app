@@ -63,9 +63,7 @@ export const makePostRequest = async (
     query = null
   ) => {
 
-    // let headers  = {
-    //     'Content-Type': 'multipart/form-data'
-    // }
+    let headers  = {}
 
     // headers["Access-Control-Allow-Origin"] = "http://localhost:3000";
     // headers["Access-Control-Allow-Credentials"] = "true";
@@ -80,7 +78,7 @@ export const makePostRequest = async (
       try {
         fetch(url + queryString, {
           method: "POST",
-          mode: 'no-cors',
+          headers: headers,
           body: formData
         })
         .then(

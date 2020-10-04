@@ -51,6 +51,17 @@
     left: 45%;
 }
 
+.gifImagePreview {
+    border: 1px solid #ccc;
+    padding: 15px;
+    margin-bottom: 15px;
+    box-shadow: 2px 2px 5px #ccc;
+}
+
+.gifImagePreviewText {
+    margin-bottom: 5px;
+}
+
 @media (max-width:580px) {
     .UploadLoaderText {
         top: 50%;
