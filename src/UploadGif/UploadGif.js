@@ -3,37 +3,64 @@ import { Button, Form, FormGroup, Label, CustomInput } from 'reactstrap';
 import ChipInput from "material-ui-chip-input";
 
 import classes from './UploadGif.module.css';
+import { makePostRequest } from '../http/http-service';
 
 export default class UploadGif extends Component {
 
     state = {
-        file: '',
-        tags: []
+        selectedFile: '',
+        tags: [],
+        gifId: '',
+        loading: false
     }
-    previewUploadGif = (gifId) => {
-        this.props.history.push(`/preview/${gifId}`)
-        // return (<Router> <Redirect to='/trending/gif' Component={TrendingGif} /> </Router>)
+
+    previewUploadGif = () => {
+        this.props.history.push(`/preview/${this.state.gifId}`)
     }
 
     uploadGifToServer = (e) => {
         e.preventDefault();
 
-        if(e.target.file.files.length === 0 || e.target.file.files[0].type !== 'image/gif') {
+        if(this.state.selectedFile === '' || this.state.selectedFile.type !== 'image/gif') {
             alert('only gif file is allowed!');
             return;
         }
 
         const uploadGifData = new FormData();
 
-        uploadGifData.append('file', e.target.file.files[0])
+        uploadGifData.append('file', this.state.selectedFile)
 
+        console.log('file: ', this.state.selectedFile)
         if(this.state.tags.length>0) {
             let gifTags = this.state.tags.join(',')
             uploadGifData.append('tags', gifTags)
+            console.log(gifTags)
         }
 
-        console.log(uploadGifData)
+        this.setState({loading:true})
 
+        makePostRequest(
+            `https://upload.giphy.com/v1/gifs`, 
+            uploadGifData, 
+                {
+                    api_key:'iQJIGVpAwQI36Glqc1u04Xu6LThD5yA3', 
+                }
+            )
+            .then(res => {
+                this.setState({
+                    gifId: res.data.id, 
+                },()=>{
+                    this.setState({loading:false})
+                    console.log(this.state)
+                    this.previewUploadGif()
+                })
+            })
+            .catch(err => {
+                this.setState({loading:false})
+                console.log('api error: ',err)
+                alert('error in uploading gif!')
+                // this.props.history.push(`/error`)
+            })
     }
 
     // Add Chips
@@ -42,6 +69,8 @@ export default class UploadGif extends Component {
 
         this.setState({
             tags: [...this.state.tags, chip.trim()]
+        },() => {
+            console.log(this.state.tags)
         });
     }
 
@@ -59,7 +88,20 @@ export default class UploadGif extends Component {
         });
     }
 
+    // On file select (from the pop up) 
+    onFileChange = (e) => { 
+     
+        if(e.target.files.length === 0 || e.target.files[0].type !== 'image/gif') {
+            alert('only gif file is allowed!');
+            return;
+        }
+        // Update the state 
+        this.setState({ selectedFile: e.target.files[0] }); 
+       
+    }; 
+
     render() {
+
         return (
             <div className="container">
                 <div>
@@ -67,37 +109,50 @@ export default class UploadGif extends Component {
                 </div>
                 <hr />
 
-                <Form onSubmit={this.uploadGifToServer}>
-                    <FormGroup>
-                        <Label for="exampleCustomFileBrowser">Gif File</Label>
-                        <CustomInput 
-                        // required 
-                        name="file"
-                        type="file" 
-                        className={classes.gifFileInput}
-                        id="exampleCustomFileBrowser" 
-                        label="Yo, pick a gif file!" />
-                    </FormGroup>
+                {
+                    this.state.loading ? 
+                    <>
+                        <img src={'http://localhost:3000/loader.gif'} alt="loader"
+                        className={classes.UploadLoader} /> 
+                        <p className={classes.UploadLoaderText}>Uploading Gif...</p>
+                    </>
+                    : 
+                    <>
 
-                    <FormGroup>
-                        <Label>Tags Name</Label> <br />
-                        <ChipInput
-                            // required
-                            className={classes.chipTagInput}
-                            value={this.state.tags}
-                            onAdd={(chip) => this.handleAddChip(chip)}
-                            onDelete={(chip, index) => this.handleDeleteChip(chip, index)}
-                        />
-                    </FormGroup>
-                    
-                    <FormGroup> 
-                        <Button color="primary" 
-                        className={[classes.uploadGifButton,"float-right"].join(' ')} 
-                        type="submit">
-                            Add Gif
-                        </Button>
-                    </FormGroup>
-                </Form>
+                    <Form onSubmit={this.uploadGifToServer} encType="multipart/form-data">
+                        <FormGroup>
+                            <Label for="exampleCustomFileBrowser">Gif File</Label>
+                            <CustomInput 
+                            required 
+                            onChange={this.onFileChange}
+                            name="file"
+                            type="file" 
+                            className={classes.gifFileInput}
+                            id="exampleCustomFileBrowser" 
+                            label="Yo, pick a gif file!" />
+                        </FormGroup>
+
+                        <FormGroup>
+                            <Label>Tags Name</Label> <br />
+                            <ChipInput
+                                className={classes.chipTagInput}
+                                value={this.state.tags}
+                                onAdd={(chip) => this.handleAddChip(chip)}
+                                onDelete={(chip, index) => this.handleDeleteChip(chip, index)}
+                            />
+                        </FormGroup>
+                        
+                        <FormGroup> 
+                            <Button color="primary" 
+                            className={[classes.uploadGifButton,"float-right"].join(' ')} 
+                            type="submit">
+                                Add Gif
+                            </Button>
+                        </FormGroup>
+                    </Form>
+                    </>
+                }
+            
             </div>
         )
     }

@@ -1,7 +1,7 @@
 
 .MainCard {
     margin-bottom: 40px;
-    height: 500px;
+    height: auto;
     width: 400px;
     box-shadow: 1px 2px 5px teal;
     animation: mainCardAnimi 2s infinite;
@@ -53,14 +53,13 @@
   
     .MainCard {
       width: 100%;
+      height: auto;
       margin-bottom: 30px;
     }
 
     .CardHeaderTitle, .CardHeaderDate {
         margin-left: 5px;
     }
-
-  
 }
 
 @keyframes mainCardAnimi {

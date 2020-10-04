@@ -1,0 +1,28 @@
+.PreviewPageHeading {
+    padding-top: 15px;
+    animation: previewPageHeadingAnimi 3s infinite;
+}
+
+.previewLoader {
+    width: 100%;
+}
+
+@media screen and (max-width: 470px) {
+
+    .PreviewPageHeading {
+        font-size: 22px;
+    }
+}
+
+@keyframes previewPageHeadingAnimi {
+    0% {
+        text-shadow: 1px 2px 5px lightblue;
+    }
+    50% {
+        /* color: white; */
+        text-shadow: 1px 2px 5px teal;
+    }
+    100% {
+        text-shadow: 1px 2px 5px lightblue;
+    }
+}
