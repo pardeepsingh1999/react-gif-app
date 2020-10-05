@@ -88,7 +88,7 @@ export const makePostRequest = async (
             }
         )
         .then(jsonResponse => {
-                console.log('post res ', jsonResponse)
+                // console.log('post res ', jsonResponse)
                 if (jsonResponse.meta.status === 200) { // change this condition according to response structure
                     resolve(jsonResponse);
                 } else if(jsonResponse.meta.status === 404) {

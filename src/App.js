@@ -5,7 +5,8 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Link
+  Link,
+  Redirect
 } from "react-router-dom";
 import { 
   Collapse, Navbar, NavbarToggler, Nav, NavItem 
@@ -15,7 +16,7 @@ import SearchGif from './SearchGif/SearchGif';
 import TrendingGif from './TrendingGif/TrendingGif';
 import UploadGif from './UploadGif/UploadGif';
 import Error from './Error';
-import Home from './Home';
+// import Home from './Home';
 import PreviewUploadGif from './PreviewUploadGif/PreviewUploadGif';
 
 class App extends Component {
@@ -89,7 +90,9 @@ class App extends Component {
                 </Navbar>
 
                 <Switch>
-                    <Route exact path="/" component={Home} />
+                    {/* <Route exact path="/" component={Home} /> */}
+
+                    <Route exact path="/" render={() => <Redirect to="/trending/gif" />} />
 
                     <Route path="/trending/gif" component={TrendingGif} />
                        
@@ -100,7 +103,8 @@ class App extends Component {
                     <Route path="/preview/:gifId" component={PreviewUploadGif} />
 
                     <Route component={Error} />
-                   
+                    {/* <Route path="/" component={YourComponent} />
+                    <Route path="/" render={() => <Redirect to="/route-name" />} /> */}
                 </Switch>
 
             </Router>

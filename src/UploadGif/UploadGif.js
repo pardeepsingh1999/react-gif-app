@@ -142,6 +142,7 @@ export default class UploadGif extends Component {
                             required 
                             onChange={this.onFileChange}
                             name="file"
+                            accept="image/gif"
                             type="file" 
                             className={classes.gifFileInput}
                             id="exampleCustomFileBrowser" 
