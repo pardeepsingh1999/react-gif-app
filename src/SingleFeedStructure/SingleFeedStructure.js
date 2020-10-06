@@ -17,16 +17,16 @@ export default class SingleFeedStructure extends Component {
                             <Row>
                                 <Col xs="2">
                                     <CardImg className={classes.CardHeaderImage}
-                                    src={this.props.userAvatar}
+                                    src={this.props.data.userAvatar}
                                     alt="user img" />
                                 </Col>
 
                                 <Col xs="10">
                                     <CardTitle className={classes.CardHeaderTitle}>
-                                        {this.props.userName}
+                                        {this.props.data.userName}
                                     </CardTitle>
                                     <CardSubtitle className={classes.CardHeaderDate}>
-                                        {this.props.date}
+                                        {this.props.data.date}
                                     </CardSubtitle>
                                 </Col>
                             </Row>
@@ -34,11 +34,11 @@ export default class SingleFeedStructure extends Component {
                     </CardBody>
                 
                     <CardBody className={classes.CardDescription} >
-                        <CardText>{this.props.title}</CardText>
+                        <CardText>{this.props.data.title}</CardText>
                     </CardBody>
 
                     <CardImg className={classes.MainCardGif} 
-                    src={this.props.gifUrl}
+                    src={this.props.data.gifUrl}
                     // src="https://media2.giphy.com/media/gVoPEm5JkFdwUBNMoU/giphy.gif?cid=70002724ab861197151419f26e22777d9006ba598ee59ad7&rid=giphy.gif"
                     alt="gif" />
 

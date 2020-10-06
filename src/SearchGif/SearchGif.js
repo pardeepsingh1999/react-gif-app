@@ -20,7 +20,9 @@ export default class SearchGif extends Component {
         loading: false,
         currentPage: 1,
         gifPerPage: 10,
-        gifOffset: 0
+        gifOffset: 0,
+        pageNumber: [],
+        disableLastBtn: true
     }
 
     searchGifDataByName = () => {
@@ -43,6 +45,7 @@ export default class SearchGif extends Component {
                 },()=>{
                     this.setState({loading:false})
                     console.log(this.state)
+                    this.configPaginationControl()
                 })
             })
             .catch(err => {
@@ -112,81 +115,86 @@ export default class SearchGif extends Component {
         console.log('next')
     }
 
-    render() {
+    configPaginationControl = async () => {
 
-        const FeedCard = this.state.gifData.length>0 ? 
-                            this.state.gifData.map(e => {
-                                return <SingleFeedStructure 
-                                key={e.id} 
-                                userAvatar={e.user ? e.user.avatar_url : 'http://localhost:3000/sampleGif.gif'}
-                                userName={e.username ? e.username : 'Guest User'}
-                                date={e.import_datetime.split(' ')[0]}
-                                title={e.title}
-                                gifUrl={e.images.original.url}
-                                />
-                            })
-                            :
-                            null;
-        
-        
-        let disableLastBtn=true;
-        let paginationElement='';
+        const indexOfLastPost = Math.ceil(this.state.gifPagination.total_count/10)
 
-        if(FeedCard) {                    
+        const pageNumber = []
 
-            const indexOfLastPost = Math.ceil(this.state.gifPagination.total_count/10)
+        this.setState({disableLastBtn:false});
 
-            const pageNumber = []
+        if(this.state.gifOffset % 100 === 0) {
+            for(let i = this.state.gifOffset/10; i < (this.state.gifOffset/10)+10; i++) {
+                if(i>=indexOfLastPost) {
+                    this.setState({disableLastBtn:true});
+                    break;
+                }
+                if(i+1>=indexOfLastPost) this.setState({disableLastBtn:true});
 
-            disableLastBtn=false;
-
-            if(this.state.gifOffset % 100 === 0) {
-                for(let i = this.state.gifOffset/10; i < (this.state.gifOffset/10)+10; i++) {
-                    if(i>=indexOfLastPost) {
-                        disableLastBtn = true;
+                pageNumber.push(i+1)
+            }
+        } else {
+            if(this.state.gifOffset < 100) {
+                for(let i = 0; i < this.state.gifPerPage; i++) {
+                    if(i+1>=indexOfLastPost) {
+                        this.setState({disableLastBtn:true});
                         break;
                     }
-                    if(i+1>=indexOfLastPost) disableLastBtn = true;
+                    if(i>=indexOfLastPost) this.setState({disableLastBtn:true});
 
                     pageNumber.push(i+1)
                 }
             } else {
-                if(this.state.gifOffset < 100) {
-                    for(let i = 0; i < this.state.gifPerPage; i++) {
-                        if(i+1>=indexOfLastPost) {
-                            disableLastBtn = true;
-                            break;
-                        }
-                        if(i>=indexOfLastPost) disableLastBtn = true;
+                const pageReminder = this.state.gifOffset % 100;
 
-                        pageNumber.push(i+1)
+                let startingValue = ( (this.state.gifOffset - pageReminder) / 10)
+                for(let i = startingValue; i < startingValue+10; i++) {
+                    if(i>=indexOfLastPost) {
+                        this.setState({disableLastBtn:true});
+                        break;
                     }
-                } else {
-                    const pageReminder = this.state.gifOffset % 100;
+                    if(i+1>=indexOfLastPost) this.setState({disableLastBtn:true});
 
-                    let startingValue = ( (this.state.gifOffset - pageReminder) / 10)
-                    for(let i = startingValue; i < startingValue+10; i++) {
-                        if(i>=indexOfLastPost) {
-                            disableLastBtn = true;
-                            break;
-                        }
-                        if(i+1>=indexOfLastPost) disableLastBtn = true;
-
-                        pageNumber.push(i+1)
-                    }
+                    pageNumber.push(i+1)
                 }
             }
+        }
+        this.setState({pageNumber:pageNumber})
+    }
 
-            const currentPage = this.state.currentPage;
+    render() {
 
+        const FeedCard = this.state.gifData.length>0 ? 
+                            this.state.gifData.map(e => {
+                                let data = {
+                                    userAvatar: e.user ? e.user.avatar_url : require('../assets/sampleGif.gif'),
+                                    userName: e.username ? e.username : 'Guest User',
+                                    date: e.import_datetime.split(' ')[0],
+                                    title: e.title,
+                                    gifUrl: e.images.original.url,
+                                }
+                                return <SingleFeedStructure 
+                                            key={e.id} 
+                                            data={data}
+                                        />
+                            })
+                            :
+                            null;
+        
+        const {currentPage, pageNumber} = this.state;
+
+        let paginationElement;
+        if(FeedCard && pageNumber.length>0) {
             paginationElement = pageNumber.map(e => {
                 return (<PaginationItem key={e} className={currentPage===e ? 'active' : ''}>
                                 <PaginationLink onClick={()=>this.paginate(e)}>
                                     {e}
                                 </PaginationLink>
                         </PaginationItem>)
-            })
-        }
+            })  
+        } else {
+            paginationElement = null;
+        }          
 
         return (
             <div className="container">
@@ -206,7 +214,7 @@ export default class SearchGif extends Component {
 
                 {
                 this.state.loading ? 
-                    <img src={'http://localhost:3000/loader.gif'} alt="loader" className={classes.searchLoader} /> 
+                    <img src={require('../assets/loader.gif')} alt="loader" className={classes.searchLoader} /> 
                     : 
                     <div>
                         <div className={[classes.AllCardSection,'d-flex', 
@@ -227,7 +235,7 @@ export default class SearchGif extends Component {
                                     <PaginationItem>
                                         <PaginationLink next 
                                         disabled={
-                                            (disableLastBtn)
+                                            (this.state.disableLastBtn)
                                             ?
                                             true
                                             :

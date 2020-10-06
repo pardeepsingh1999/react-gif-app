@@ -48,17 +48,24 @@ export default class PreviewUploadGif extends Component {
 
     render() {
 
-        const FeedCard = this.state.gifData !== '' ? 
-                            <SingleFeedStructure
-                                key={this.state.gifData.id} 
-                                userAvatar={this.state.gifData.user ? this.state.gifData.user.avatar_url : 'http://localhost:3000/sampleGif.gif'}
-                                userName={this.state.gifData.username ? this.state.gifData.username : 'Guest User'}
-                                date={this.state.gifData.import_datetime.split(' ')[0]}
-                                title={this.state.gifData.title}
-                                gifUrl={this.state.gifData.images.original.url}
-                            />
-                            :
-                            null;
+        let FeedCard;
+        if(this.state.gifData !== '') {
+            let data = {
+                userAvatar: this.state.gifData.user ? this.state.gifData.user.avatar_url : require('../assets/sampleGif.gif'),
+                userName: this.state.gifData.username ? this.state.gifData.username : 'Guest User',
+                date: this.state.gifData.import_datetime.split(' ')[0],
+                title: this.state.gifData.title,
+                gifUrl: this.state.gifData.images.original.url,
+            }
+            FeedCard = <SingleFeedStructure
+                            key={this.state.gifData.id} 
+                            data={data}
+                        />
+        } else {
+            FeedCard = null;
+        }
+
+                            
 
         return (
             <div className="container">
@@ -68,7 +75,7 @@ export default class PreviewUploadGif extends Component {
 
                 {
                 this.state.loading ? 
-                    <img src={'http://localhost:3000/loader.gif'} alt="loader" className={classes.previewLoader} /> 
+                    <img src={require('../assets/loader.gif')} alt="loader" className={classes.previewLoader} /> 
                     : 
                     <>
                     <hr />

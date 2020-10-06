@@ -13,7 +13,9 @@ export default class TrendingGif extends Component {
         loading: false,
         currentPage: 1,
         gifPerPage: 10,
-        gifOffset: 0
+        gifOffset: 0,
+        pageNumber: [],
+        disableLastBtn: true
     }
 
     async componentDidMount() {
@@ -40,6 +42,7 @@ export default class TrendingGif extends Component {
                 },()=>{
                     this.setState({loading:false})
                     console.log(this.state)
+                    this.configPaginationControl()
                 })
             })
             .catch(err => {
@@ -92,83 +95,92 @@ export default class TrendingGif extends Component {
             })
         }
         console.log('next')
-    }
+    };
+
+    configPaginationControl = async () => {
+
+        const indexOfLastPost = Math.ceil(this.state.gifPagination.total_count/10)
+
+        const pageNumber = []
+
+        this.setState({disableLastBtn:false});
+
+        if(this.state.gifOffset % 100 === 0) {
+            for(let i = this.state.gifOffset/10; i < (this.state.gifOffset/10)+10; i++) {
+                if(i>=indexOfLastPost) {
+                    this.setState({disableLastBtn:true});
+                    break;
+                }
+                if(i+1>=indexOfLastPost) this.setState({disableLastBtn:true});
+
+                pageNumber.push(i+1)
+            }
+        } else {
+            if(this.state.gifOffset < 100) {
+                for(let i = 0; i < this.state.gifPerPage; i++) {
+                    if(i+1>=indexOfLastPost) {
+                        this.setState({disableLastBtn:true});
+                        break;
+                    }
+                    if(i>=indexOfLastPost) this.setState({disableLastBtn:true});
+
+                    pageNumber.push(i+1)
+                }
+            } else {
+                const pageReminder = this.state.gifOffset % 100;
+
+                let startingValue = ( (this.state.gifOffset - pageReminder) / 10)
+                for(let i = startingValue; i < startingValue+10; i++) {
+                    if(i>=indexOfLastPost) {
+                        this.setState({disableLastBtn:true});
+                        break;
+                    }
+                    if(i+1>=indexOfLastPost) this.setState({disableLastBtn:true});
+
+                    pageNumber.push(i+1)
+                }
+            }
+        }
+        this.setState({pageNumber:pageNumber})
+    };
 
     render() {
 
         if(this.state.loading) {
-            return <img src={'http://localhost:3000/loader.gif'} alt="loader" className={classes.trendingLoader} />
+            return <img src={require('../assets/loader.gif')} alt="loader" className={classes.trendingLoader} />
         }
 
         const FeedCard = this.state.gifData.length>0 ? 
                             this.state.gifData.map(e => {
+                                let data = {
+                                    userAvatar: e.user ? e.user.avatar_url : require('../assets/sampleGif.gif'),
+                                    userName: e.username ? e.username : 'Guest User',
+                                    date: e.trending_datetime.split(' ')[0],
+                                    title: e.title,
+                                    gifUrl: e.images.original.url,
+                                }
                                 return <SingleFeedStructure 
                                 key={e.id} 
-                                userAvatar={e.user ? e.user.avatar_url : 'http://localhost:3000/sampleGif.gif'}
-                                userName={e.username ? e.username : 'Guest User'}
-                                date={e.trending_datetime.split(' ')[0]}
-                                title={e.title}
-                                gifUrl={e.images.original.url}
+                                data={data}
                                 />
                             })
                             :
                             null;
         
-        let disableLastBtn=false;
-        let paginationElement='';
-        
-        if(FeedCard) {
-            const indexOfLastPost = Math.ceil(this.state.gifPagination.total_count/10)
+        const {currentPage, pageNumber} = this.state;
 
-            const pageNumber = []
-        
-            if(this.state.gifOffset % 100 === 0) {
-                for(let i = this.state.gifOffset/10; i < (this.state.gifOffset/10)+10; i++) {
-                    if(i>=indexOfLastPost) {
-                        disableLastBtn = true;
-                        break;
-                    }
-                    if(i+1>=indexOfLastPost) disableLastBtn = true;
-    
-                    pageNumber.push(i+1)
-                }
-            } else {
-                if(this.state.gifOffset < 100) {
-                    for(let i = 0; i < this.state.gifPerPage; i++) {
-                        if(i+1>=indexOfLastPost) {
-                            disableLastBtn = true;
-                            break;
-                        }
-                        if(i>=indexOfLastPost) disableLastBtn = true;
-    
-                        pageNumber.push(i+1)
-                    }
-                } else {
-                    const pageReminder = this.state.gifOffset % 100;
-    
-                    let startingValue = ( (this.state.gifOffset - pageReminder) / 10)
-                    for(let i = startingValue; i < startingValue+10; i++) {
-                        if(i>=indexOfLastPost) {
-                            disableLastBtn = true;
-                            break;
-                        }
-                        if(i+1>=indexOfLastPost) disableLastBtn = true;
-    
-                        pageNumber.push(i+1)
-                    }
-                }
-            }
-    
-            const currentPage = this.state.currentPage;
-    
+        let paginationElement;
+        if(FeedCard && pageNumber.length>0) {
             paginationElement = pageNumber.map(e => {
                 return (<PaginationItem key={e} className={currentPage===e ? 'active' : ''}>
                                 <PaginationLink onClick={()=>this.paginate(e)}>
                                     {e}
                                 </PaginationLink>
                         </PaginationItem>)
-            })
-        }
+            })  
+        } else {
+            paginationElement = null;
+        }  
 
         return (
             <div className="container">
@@ -199,7 +211,7 @@ export default class TrendingGif extends Component {
                         <PaginationItem>
                             <PaginationLink next 
                             disabled={
-                                (disableLastBtn)
+                                (this.state.disableLastBtn)
                                 ?
                                 true
                                 :

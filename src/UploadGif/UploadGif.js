@@ -128,7 +128,7 @@ export default class UploadGif extends Component {
                 {
                     this.state.loading ? 
                     <>
-                        <img src={'http://localhost:3000/loader.gif'} alt="loader"
+                        <img src={require('../assets/loader.gif')} alt="loader"
                         className={classes.UploadLoader} /> 
                         <p className={classes.UploadLoaderText}>Uploading Gif...</p>
                     </>
