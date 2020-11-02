@@ -5,6 +5,7 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
+  NavLink,
   Link,
   Redirect
 } from "react-router-dom";
@@ -26,23 +27,14 @@ class App extends Component {
     gifType: '',
     gifPagination: '',
     loading: true,
-    collapsed: true,
-    activeLink: 'upload'
+    collapsed: true
   }
 
   componentDidMount() {
     console.log('app mount: ', window.location.href)
-    const activeLinkIs = window.location.href.split('/')[3] ? window.location.href.split('/')[3] : '';
-    this.setState({activeLink:activeLinkIs})
   }
 
   toggleNavbar = () => this.setState({collapsed: !this.state.collapsed});
-
-  handleActiveLink = (e) => {
-      const activeLinkIs = e.target.href ? e.target.href.split('/')[3] : '';
-      this.setState({activeLink:activeLinkIs})
-  }
-
 
   render() {
     return (
@@ -51,7 +43,7 @@ class App extends Component {
             <Router>
 
                 <Navbar color="dark" dark expand="sm">
-                    <div className="pt-1 pb-1" onClick={this.handleActiveLink}>
+                    <div className="pt-1 pb-1">
                         <Link to="/trending/gif" className={classes.NavbarBrandLink}>
                             GIF
                         </Link>
@@ -60,33 +52,33 @@ class App extends Component {
                     <NavbarToggler className={classes.NavBarToggler} onClick={this.toggleNavbar} />
                     <Collapse isOpen={this.state.collapsed} navbar>
                         <Nav className="mr-auto" navbar>
-                            <NavItem className="pt-2 pb-2" onClick={this.handleActiveLink}>
-                                    <Link to="/trending/gif" 
-                                    className={this.state.activeLink === 'trending' ? 
-                                    [classes.NavbarLink,classes.active].join(' ') :
-                                    classes.NavbarLink}>
+                            <NavItem className="pt-2 pb-2">
+                                    <NavLink to="/trending/gif" 
+                                    activeClassName={classes.active}
+                                    className={classes.NavbarLink}
+                                    >
                                         Trending GIF
-                                    </Link>
+                                    </NavLink>
                                     {/* <NavLink to="/trending/gif" 
                                     className={this.state.activeLink === 'trending' ? 
                                     [classes.NavbarLink,classes.active].join(' ') :
                                     classes.NavbarLink}>Trending GIF</NavLink> */}
                             </NavItem>
-                            <NavItem className="pt-2 pb-2" onClick={this.handleActiveLink}>
-                                    <Link to="/search/gif"
-                                    className={this.state.activeLink === 'search' ? 
-                                    [classes.NavbarLink,classes.active].join(' ') :
-                                    classes.NavbarLink}>
+                            <NavItem className="pt-2 pb-2">
+                                    <NavLink to="/search/gif"
+                                    activeClassName={classes.active}
+                                    className={classes.NavbarLink}
+                                    >
                                         Search GIF
-                                    </Link>
+                                    </NavLink>
                             </NavItem>
-                            <NavItem className="pt-2 pb-2" onClick={this.handleActiveLink}>
-                                    <Link to="/upload/gif"
-                                    className={this.state.activeLink === 'upload' ? 
-                                    [classes.NavbarLink,classes.active].join(' ') :
-                                    classes.NavbarLink}>
+                            <NavItem className="pt-2 pb-2">
+                                    <NavLink to="/upload/gif"
+                                    activeClassName={classes.active}
+                                    className={classes.NavbarLink}
+                                    >
                                         Upload GIF
-                                    </Link>
+                                    </NavLink>
                             </NavItem>
                         </Nav>
                         {/* <NavbarText>Simple Text</NavbarText> */}
