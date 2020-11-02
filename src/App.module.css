@@ -6,7 +6,7 @@
     font-size: 1.5rem;
     font-weight: 600;
     color: white;
-    padding-right: 20px;
+    padding-right: 30px;
 
 }
 
@@ -17,8 +17,7 @@
 
 .NavbarLink {
     color: #dddddd;
-    padding-right: 10px;
-
+    padding-right: 20px;
 }
 
 .NavbarLink:hover {

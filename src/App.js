@@ -51,7 +51,7 @@ class App extends Component {
             <Router>
 
                 <Navbar color="dark" dark expand="sm">
-                    <div onClick={this.handleActiveLink}>
+                    <div className="pt-1 pb-1" onClick={this.handleActiveLink}>
                         <Link to="/trending/gif" className={classes.NavbarBrandLink}>
                             GIF
                         </Link>
@@ -60,15 +60,19 @@ class App extends Component {
                     <NavbarToggler className={classes.NavBarToggler} onClick={this.toggleNavbar} />
                     <Collapse isOpen={this.state.collapsed} navbar>
                         <Nav className="mr-auto" navbar>
-                            <NavItem onClick={this.handleActiveLink}>
+                            <NavItem className="pt-2 pb-2" onClick={this.handleActiveLink}>
                                     <Link to="/trending/gif" 
                                     className={this.state.activeLink === 'trending' ? 
                                     [classes.NavbarLink,classes.active].join(' ') :
                                     classes.NavbarLink}>
                                         Trending GIF
                                     </Link>
+                                    {/* <NavLink to="/trending/gif" 
+                                    className={this.state.activeLink === 'trending' ? 
+                                    [classes.NavbarLink,classes.active].join(' ') :
+                                    classes.NavbarLink}>Trending GIF</NavLink> */}
                             </NavItem>
-                            <NavItem onClick={this.handleActiveLink}>
+                            <NavItem className="pt-2 pb-2" onClick={this.handleActiveLink}>
                                     <Link to="/search/gif"
                                     className={this.state.activeLink === 'search' ? 
                                     [classes.NavbarLink,classes.active].join(' ') :
@@ -76,7 +80,7 @@ class App extends Component {
                                         Search GIF
                                     </Link>
                             </NavItem>
-                            <NavItem onClick={this.handleActiveLink}>
+                            <NavItem className="pt-2 pb-2" onClick={this.handleActiveLink}>
                                     <Link to="/upload/gif"
                                     className={this.state.activeLink === 'upload' ? 
                                     [classes.NavbarLink,classes.active].join(' ') :
